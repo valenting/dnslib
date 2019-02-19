@@ -1,4 +1,31 @@
 
+    EDNS Client Subnet test
+    ------
+
+    The file at `dnslib/server/dns_server_ecs_response.py` defines a DNS server
+    that looks at the ECS Option (RFC 7871) in the DNS request and if present
+    will respond with the subnet as an answer to the A question.
+    If the option is missing, the server will respond with 99.99.99.99
+
+    In order to test if your resolver supports EDNS Client Subnet follow these
+    steps:
+        * Clone this repo
+        * Go into the folder you just cloned and run
+            python -m dnslib.server.dns_server_ecs_response
+        * Setup your DNS
+            If you own example.com, then you need to add two records:
+                test.example.com NS ns1.test.example.com
+                ns1.test.example.com A [your_router's_IP_address]
+            The server is running on port 5053, so your router must forward
+            port 53 to [your_machine]:5053
+        * Test if your resolver supports the client subnet. Examples:
+            dig a.test.example.com @1.1.1.1 +subnet=255.255.255.255/13
+            dig a.test.example.com @1.1.1.1 +nosubnet
+            dig a.test.example.com @1.1.1.1 +subnet=0/0
+            dig a.test.example.com @8.8.8.8 +subnet=255.255.255.255/13
+            dig a.test.example.com @8.8.8.8 +nosubnet
+            dig a.test.example.com @8.8.8.8 +subnet=0/0
+
     dnslib
     ------
 
