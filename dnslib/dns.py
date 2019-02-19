@@ -418,7 +418,7 @@ class EDNSOption(object):
         self.data = data
 
     def __str__(self):
-        return "<EDNS Option: Code=%d Data=%s>" % (self.code,self.data)
+        return "<EDNS Option: Code=%d Data=%s>" % (self.code, ''.join([r'\x%x'%ord(c) for c in self.data]))
 
 class RR(object):
 
@@ -471,8 +471,8 @@ class RR(object):
 
     def __str__(self):
         return "<DNS RR: %r rtype=%s rclass=%s ttl=%d rdata='%s'>" % (
-                    self.rname, QTYPE[self.rtype], CLASS[self.rclass], 
-                    self.ttl, self.rdata)
+                    self.rname, QTYPE[self.rtype], CLASS[self.rclass],
+                    self.ttl, ', '.join(str(x) for x in self.rdata) if type(self.rdata) is list else self.rdata)
 
 class RD(object):
 
